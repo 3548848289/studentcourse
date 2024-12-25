@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhx.studentcourse.dao.ITeacherDao">
+    <resultMap id="TeacherResultMap" type="Teacher">
+        <id column="t_id" property="teacherId"></id>
+        <result column="t_no" property="teacherNo"></result>
+        <result column="t_name" property="teacherName"></result>
+        <result column="t_dep_id" property="teacherDepartmentId"></result>
+       <result column="dep_name" property="teacherDepartmentName"></result>
+    </resultMap>
+    <select id="getAll" resultMap="TeacherResultMap" parameterType="Teacher">
+        select *   from teacher as t
+        left join department as d on t.t_dep_id = d.dep_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="teacherName!=null">
+                and t_name like #{teacherName}
+            </if>
+            <if test="teacherDepartmentName!=null">
+                and dep_name like #{teacherDepartmentName}
+            </if>
+        </trim>
+    </select>
+    <select id="getTeacherByNo" resultMap="TeacherResultMap" >
+        select * from teacher as t
+        left join department as d on t.t_dep_id = d.dep_id
+        where t_no = #{no}
+    </select>
+    <insert id="insertTeacher" parameterType="Teacher">
+        insert into student(t_no,t_name,t_dep_id) values (#{teacherNo},#{teacherName},#{teacherDepartmentId})
+    </insert>
+</mapper>

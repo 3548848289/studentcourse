@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- 配置包扫描基础路径 -->
+    <context:component-scan base-package="com.zhx.studentcourse"></context:component-scan>
+    <!-- 开启注解驱动 -->
+    <mvc:annotation-driven/>
+    <!-- 配置静态资源映射 -->
+    <mvc:resources location="/WEB-INF/images/" mapping="/images/**"/>
+    <mvc:resources location="/WEB-INF/css/" mapping="/css/**"/>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**/"/>
+            <mvc:exclude-mapping path="/"/>
+            <mvc:exclude-mapping path="/images/*"/>
+            <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/startRegister"/>
+            <mvc:exclude-mapping path="/register"/>
+            <bean class="com.zhx.studentcourse.interceptor.LoginInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!-- 配置视图解析器，spring mvc会将控制器返回的视图名称自动加上前缀和后缀 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          id="internalResourceViewResolver">
+        <!-- 前缀 -->
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <!-- 后缀 -->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <context:property-placeholder location="WEB-INF/database-config.properties" ignore-resource-not-found="true"/>
+    <!-- 配置Druid数据源 -->
+    <bean class="com.alibaba.druid.pool.DruidDataSource"
+          id="dataSource">
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+    <!-- Spring整合mybatis -->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean"
+          id="sqlSessionFactoryBean">
+        <!-- 关联数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 关联mybatis的配置文件 -->
+        <property name="configLocation" value="WEB-INF/mybatis-spring.xml"/>
+        <!-- 指定映射文件的位置 -->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <!-- 添加别名 -->
+        <property name="typeAliasesPackage" value="com.zhx.studentcourse.pojo"/>
+    </bean>
+    <!-- mapper接口包扫描 -->
+    <bean id="mapperScan" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+        <property name="basePackage" value="com.zhx.studentcourse"/>
+    </bean>
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!-- 启用事务注解 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+        <!--resolveLazily 延迟文件解析，防止controller响应时间很长  上传大文件使用，文件小可以不用 -->
+        <property name="resolveLazily" value="true"/>
+    </bean>
+</beans>

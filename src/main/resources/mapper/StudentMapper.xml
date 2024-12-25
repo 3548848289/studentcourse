@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhx.studentcourse.dao.IStudentDao">
+    <resultMap id="StudentResultMap" type="Student">
+        <id column="stu_id" property="stuId"></id>
+        <result column="stu_sno" property="stuSno"></result>
+        <result column="stu_name" property="stuName"></result>
+        <result column="stu_dep_id" property="stuDepId"></result>
+       <result column="dep_name" property="stuDepName"></result>
+    </resultMap>
+    <select id="getAll" resultMap="StudentResultMap" parameterType="Student">
+        select s.stu_id,s.stu_sno,s.stu_name,s.stu_dep_id,d.dep_name
+        from student as s
+        left join department as d on s.stu_dep_id = d.dep_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="stuName!=null">
+                and stu_name like #{stuName}
+            </if>
+            <if test="stuDepName!=null">
+                and dep_name like #{stuDepName}
+            </if>
+        </trim>
+    </select>
+    <select id="getStudentBySno" resultMap="StudentResultMap" >
+        select s.stu_id,s.stu_sno,s.stu_name,s.stu_dep_id,d.dep_name
+        from student as s
+        left join department as d on s.stu_dep_id = d.dep_id
+        where s.stu_sno = #{sno}
+    </select>
+    <update id="updateStudent" parameterType="Student">
+        update student
+        <set>
+            <if test="stuSno!=null and stuSno != ''">
+                stu_sno = #{stuSno},
+            </if>
+            <if test="stuName!=null and stuName != ''">
+                stu_name = #{stuName},
+            </if>
+            <if test="stuDepId!=0">
+                stu_dep_id = #{stuDepId}
+            </if>
+        </set>
+        where stu_id=#{stuId}
+     </update>
+    <insert id="insertStudent" parameterType="Student">
+        insert into student(stu_sno,stu_name,stu_dep_id) values (#{stuSno},#{stuName},#{stuDepId})
+    </insert>
+</mapper>

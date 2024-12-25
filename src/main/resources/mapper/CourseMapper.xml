@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhx.studentcourse.dao.ICourseDao">
+    <resultMap id="CourseResultMap" type="Course">
+        <id column="c_id" property="courseId"></id>
+        <result column="c_name" property="courseName"></result>
+        <result column="c_tid" property="courseTeacherId"></result>
+        <result column="t_name" property="courseTeacherName"></result>
+        <result column="dep_name" property="courseTeacherDepartment"></result>
+        <result column="c_credit" property="courseCredit"></result>
+        <result column="c_term" property="courseTerm"></result>
+        <result column="c_max_nums" property="courseMaxStuNums"></result>
+        <result column="c_current_nums" property="courseCurrentStuNums"></result>
+        <result column="c_book_img" property="courseBookImg"></result>
+    </resultMap>
+    <select id="getAll" resultMap="CourseResultMap" parameterType="Teacher">
+        select * from course as c
+        left join teacher as t on c.c_tid = t.t_id
+        left join department as d on t.t_dep_id = d.dep_id
+        <where>
+            <if test="teacherNo!=null and teacherNo!=''">
+                and t.t_no = #{teacherNo}
+            </if>
+            <if test="teacherDepartmentId!=null and teacherDepartmentId!=0">
+                and t.t_dep_id = #{teacherDepartmentId}
+            </if>
+        </where>
+    </select>
+    <select id="getUnSelectCourse" resultMap="CourseResultMap" parameterType="Integer">
+        select * from course as c
+        left join teacher as t on c.c_tid = t.t_id
+        left join department as d on t.t_dep_id = d.dep_id
+        <where>
+            <if test="stuId!=0">
+                and  c.c_id not in (select sc_c_id from stu_course where sc_stu_id = #{stuId} )
+                and c.c_current_nums &lt; c.c_max_nums
+            </if>
+        </where>
+    </select>
+    <select id="getCourseById" resultMap="CourseResultMap">
+        select * from course as c
+        left join teacher as t on c.c_tid = t.t_id
+        left join department as d on t.t_dep_id = d.dep_id
+        where c.c_id=#{courseId}
+    </select>
+    <update id="updateCurrentNums">
+        update course set c_current_nums = (c_current_nums + 1) where c_id = #{courseId}
+    </update>
+    <update id="updateCourseImg" parameterType="Course">
+        update course set c_book_img = #{courseBookImg} where c_id = #{courseId}
+    </update>
+</mapper>
+

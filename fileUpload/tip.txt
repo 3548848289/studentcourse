@@ -1,0 +1,83 @@
+1. src/main/java（主代码目录）
+这个目录下包含了所有 Java 代码，分为不同的子包：
+
+com.zhx.studentcourse：项目的根包，包含了所有的模块。
+
+controller：控制器层，负责处理请求并返回响应。一般用于与前端交互。
+
+CourseController.java：课程相关请求的控制器。
+StuCourseController.java：学生选课相关请求的控制器。
+UserController.java：用户（如学生、教师等）相关的控制器。
+dao（数据访问对象层）：用于与数据库进行交互，通常负责数据的增、删、改、查操作。
+
+ICourseDao.java：课程表操作接口。
+IDepartmentDao.java：部门（学院等）操作接口。
+IStudentCourseDao.java：学生与课程的关系操作接口。
+IStudentDao.java：学生操作接口。
+ITeacherDao.java：教师操作接口。
+IUserDao.java：用户操作接口。
+interceptor（拦截器）：用于在请求到达控制器之前或之后进行处理。
+
+LoginInterceptor.java：登录拦截器，用于检查用户是否已经登录。
+pojo（数据模型/实体类）：用于表示数据库中的数据模型，通常与数据库表一一对应。
+
+Course.java：课程实体类。
+Department.java：部门实体类。
+StuCourseScores.java：学生课程成绩实体类。
+Student.java：学生实体类。
+StudentCourse.java：学生选课关系实体类。
+StuScore.java：学生成绩实体类。
+Teacher.java：教师实体类。
+User.java：用户实体类。
+service（服务层）：定义了业务逻辑接口，通常处理与业务相关的逻辑。
+
+ICourseService.java：课程相关的业务逻辑接口。
+IDepartmentService.java：部门相关的业务逻辑接口。
+IStudentCourseService.java：学生选课相关的业务逻辑接口。
+IStudentService.java：学生相关的业务逻辑接口。
+ITeacherService.java：教师相关的业务逻辑接口。
+IUserService.java：用户相关的业务逻辑接口。
+service.impl（服务层实现）：包含了 service 层接口的具体实现类。
+
+CourseServiceImpl.java：课程相关业务逻辑实现类。
+DepartmentService.java：部门相关业务逻辑实现类。
+StudentCourseServiceImpl.java：学生选课相关业务逻辑实现类。
+StudentServiceImpl.java：学生相关业务逻辑实现类。
+TeacherServiceImpl.java：教师相关业务逻辑实现类。
+UserServiceImpl.java：用户相关业务逻辑实现类。
+2. src/main/resources（资源文件）
+这个目录通常用于存放项目中的配置文件、映射文件、静态资源等。
+
+mapper：存放 MyBatis 映射文件，用于 SQL 映射。
+
+CourseMapper.xml：与 Course 相关的 MyBatis 映射文件。
+DepartmentMapper.xml：与 Department 相关的 MyBatis 映射文件。
+StudentCourseMapper.xml：与 StudentCourse 相关的 MyBatis 映射文件。
+StudentMapper.xml：与 Student 相关的 MyBatis 映射文件。
+TeacherMapper.xml：与 Teacher 相关的 MyBatis 映射文件。
+UserMapper.xml：与 User 相关的 MyBatis 映射文件。
+webapp：存放 Web 应用相关的文件（如 JSP 页面、配置文件等）。
+
+WEB-INF：存放 Web 应用的配置文件，只有服务器可以访问该目录中的文件。
+
+database-config.properties：数据库的配置文件（如数据库连接信息等）。
+mybatis-spring.xml：MyBatis 与 Spring 集成的配置文件。
+springmvc-servlet.xml：Spring MVC 配置文件。
+web.xml：Web 应用的部署描述符文件。
+css：存放 CSS 样式文件。
+
+s1.css、s2.css：可能是页面样式文件，用于前端界面的样式控制。
+images：存放图像文件。
+
+logo.jpg：可能是网站的 logo。
+jsp：存放 JSP 页面，用于前端显示。
+
+admin：可能是管理员相关的 JSP 页面。
+student：学生相关的 JSP 页面。
+main.jsp：学生的主页面。
+teacher：教师相关的 JSP 页面。
+course_img.jsp：教师管理课程图片的页面。
+course_student.jsp：教师管理学生课程的页面。
+main.jsp：教师的主页面。
+3. src/test（测试代码）
+这个目录下通常存放测试代码，但目前没有提供详细的测试代码结构。一般来说，这里会包括单元测试和集成测试代码。

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhx.studentcourse.dao.IDepartmentDao">
+    <resultMap id="DepartmentResultMap" type="Department">
+        <id column="dep_id" property="depId"></id>
+        <result column="dep_name" property="depName"></result>
+    </resultMap>
+    <select id="getAll" resultMap="DepartmentResultMap">
+        select * from department
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhx.studentcourse.dao.IUserDao">
+    <resultMap id="UserResultMap" type="User">
+        <id column="user_id" property="id"></id>
+        <result column="user_name" property="userName"></result>
+        <result column="user_password" property="userPassword"></result>
+        <result column="user_type" property="userType"></result>
+    </resultMap>
+    <select id="getUserById" resultMap="UserResultMap">
+        select * from users where user_id = #{userId}
+    </select>
+    <select id="getUserByUsername" resultMap="UserResultMap">
+        select * from users where user_name = #{userName}
+    </select>
+    <insert id="userRegister" parameterType="User">
+        insert into users(user_name,user_password,user_type)
+        values (#{userName},#{userPassword},#{userType})
+    </insert>
+</mapper>

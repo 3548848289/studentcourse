@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhx.studentcourse.dao.IStudentCourseDao">
+    <resultMap id="StudentCourseResultMap" type="StudentCourse">
+        <id column="sc_id" property="id"></id>
+        <result column="stu_id" property="stuId"></result>
+        <result column="stu_sno" property="stuSno"></result>
+        <result column="stu_name" property="stuName"></result>
+        <result column="dep_name" property="stuDepartment"></result>
+        <result column="c_id" property="courseId"></result>
+        <result column="c_name" property="courseName"></result>
+        <result column="c_tid" property="courseTeacherId"></result>
+        <result column="t_name" property="courseTeacherName"></result>
+        <result column="t_dep_name" property="teacherDepartment"></result>
+        <result column="c_credit" property="courseCredit"></result>
+        <result column="sc_create_time" property="createTime"></result>
+        <result column="sc_score" property="courseScore"></result>
+    </resultMap>
+    <select id="getAll" resultMap="StudentCourseResultMap" parameterType="StudentCourse">
+        select
+        sc.sc_id,s.stu_id,s.stu_sno,s.stu_name,s.stu_dep_id,d1.dep_name,c.c_id,c.c_name,c.c_tid,t.t_name,
+        d2.dep_name as t_dep_name, c.c_credit,sc.sc_create_time,sc.sc_score
+        from stu_course as sc
+        left join student as s on sc.sc_stu_id = s.stu_id
+        left join department as d1 on d1.dep_id = s.stu_dep_id
+        left join course as c on sc.sc_c_id = c.c_id
+        left join teacher as t on c.c_tid = t.t_id
+        left join department as d2 on d2.dep_id = t.t_dep_id
+        <where>
+            <if test="stuId !=0">
+                and s.stu_id = #{stuId}
+            </if>
+            <if test="stuName !=null">
+                and s.stu_name like #{stuName}
+            </if>
+            <if test="stuDepartment !=null">
+                and d1.dep_name like #{stuDepartment}
+            </if>
+            <if test="courseId!=0">
+                and sc.sc_c_id = #{courseId}
+            </if>
+        </where>
+    </select>
+    <!--<select id="" resultMap="StudentCourseResultMap">
+        select * from stu_course as sc
+        left join student as s on sc.sc_stu_id = s.stu_id
+        left join department as d on s.stu_dep_id = d.dep_id
+    </select>-->
+    <insert id="selectCourse" parameterType="StudentCourse">
+        insert into stu_course(sc_stu_id,sc_c_id,sc_create_time,sc_score)
+        values (#{stuId},#{courseId},#{createTime},#{courseScore})
+    </insert>
+
+    <update id="updateScore" parameterType="java.util.List">
+        update stu_course
+        set  sc_score=
+        <foreach collection="list" item="item" index="index"  separator=" " open="case sc_id" close="end">
+          when #{item.id} then #{item.courseScore}
+        </foreach>
+    </update>
+</mapper>
